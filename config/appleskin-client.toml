@@ -8,7 +8,7 @@
 	#Range: 0.0 ~ 1.0
 	maxHudOverlayFlashAlpha = 0.65
 	#If true, health/hunger overlay will shake to match Minecraft's icon animations
-	showVanillaAnimationsOverlay = true
+	showVanillaAnimationsOverlay = false
 	#If true, adds a line that shows your hunger, saturation, and exhaustion level in the F3 debug overlay
 	showFoodStatsInDebugOverlay = true
 	#If true, shows the hunger and saturation values of food in its tooltip while holding SHIFT
