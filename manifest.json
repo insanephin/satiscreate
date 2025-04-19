@@ -10,8 +10,8 @@
   },
   "manifestType": "minecraftModpack",
   "manifestVersion": 1,
-  "name": "satiscreate-beta",
-  "version": "",
+  "name": "satiscreate",
+  "version": "0.1.3",
   "author": "",
   "files": [
     {
