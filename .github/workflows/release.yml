@@ -1,8 +1,10 @@
 name: Publish Modpack
 
 on:
-  workflow_dispatch:
-
+  push:
+    paths:
+      - 'manifest.json'
+  
 jobs:
   publish:
     runs-on: ubuntu-latest
