@@ -1,4 +1,4 @@
-name: Build and Upload using manifest version
+name: Build and Release Modpack
 
 on:
   workflow_dispatch:
@@ -11,12 +11,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Extract version from manifest.json
-      id: get_version
+    - name: Extract name and version from manifest.json
+      id: get_info
       run: |
         VERSION=$(jq -r '.version' manifest.json)
+        NAME=$(jq -r '.name' manifest.json)
         echo "MODPACK_VERSION=$VERSION" >> $GITHUB_ENV
-        echo "version: $VERSION"
+        echo "MODPACK_NAME=$NAME" >> $GITHUB_ENV
 
     - name: Create ZIP file
       run: |
@@ -28,6 +29,17 @@ jobs:
         CF_PROJECT_ID: ${{ secrets.CF_PROJECT_ID }}
       run: |
         curl -X POST \
-          -H "x-api-key: $CF_API_KEY" \
+          -H "X-Api-Token: $CF_API_KEY" \
           -F "file=@satiscreate-${MODPACK_VERSION}.zip" \
           https://minecraft.curseforge.com/api/projects/$CF_PROJECT_ID/upload-file
+
+    - name: Create GitHub Release and Upload ZIP
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ env.MODPACK_VERSION }}-${{ github.run_number }}
+        name: "${{ env.MODPACK_NAME }} v${{ env.MODPACK_VERSION }}"
+        body: |
+            Release of ${{ env.MODPACK_NAME }} version ${{ env.MODPACK_VERSION }}.
+        files: satiscreate-${{ env.MODPACK_VERSION }}.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
