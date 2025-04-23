@@ -1,45 +1,37 @@
-name: Build and Release Modpack
+name: Publish Modpack
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Extract name and version from manifest.json
-      id: get_info
-      run: |
-        VERSION=$(jq -r '.version' manifest.json)
-        NAME=$(jq -r '.name' manifest.json)
-        echo "MODPACK_VERSION=$VERSION" >> $GITHUB_ENV
-        echo "MODPACK_NAME=$NAME" >> $GITHUB_ENV
+      - name: Extract version from manifest.json
+        id: extract
+        run: |
+          VERSION=$(jq -r '.version' manifest.json)
+          NAME=$(jq -r '.name' manifest.json)
+          echo "MODPACK_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "MODPACK_NAME=$NAME" >> $GITHUB_ENV
 
-    - name: Create ZIP file
-      run: |
-        zip -r satiscreate-${MODPACK_VERSION}.zip manifest.json overrides/
+      - name: Create zip file
+        run: |
+          zip -r satiscreate-${MODPACK_VERSION}.zip manifest.json config/
 
-    - name: Upload to CurseForge
-      env:
-        CF_API_KEY: ${{ secrets.CF_API_KEY }}
-        CF_PROJECT_ID: ${{ secrets.CF_PROJECT_ID }}
-      run: |
-        curl -X POST \
-          -H "X-Api-Token: $CF_API_KEY" \
-          -F "file=@satiscreate-${MODPACK_VERSION}.zip" \
-          https://minecraft.curseforge.com/api/projects/$CF_PROJECT_ID/upload-file
-
-    - name: Create GitHub Release and Upload ZIP
-      uses: softprops/action-gh-release@v2
-      with:
-        tag_name: v${{ env.MODPACK_VERSION }}-${{ github.run_number }}
-        name: "${{ env.MODPACK_NAME }} v${{ env.MODPACK_VERSION }}"
-        body: |
-            Release of ${{ env.MODPACK_NAME }} version ${{ env.MODPACK_VERSION }}.
-        files: satiscreate-${{ env.MODPACK_VERSION }}.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish to CurseForge and GitHub
+        uses: Kira-NT/mc-publish@v3
+        with:
+          curseforge-id: ${{ secrets.CF_PROJECT_ID }}
+          curseforge-token: ${{ secrets.CF_API_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          files: satiscreate-${{ env.MODPACK_VERSION }}.zip
+          name: "SatisCreate v${{ env.MODPACK_VERSION }}"
+          version: v${{ env.MODPACK_VERSION }}
+          version-type: release
+          changelog: "Release v${{ env.MODPACK_VERSION }}"
+          loaders: curseforge_modpack
+          game-versions: |
+            1.20.1
