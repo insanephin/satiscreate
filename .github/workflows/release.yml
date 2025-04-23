@@ -19,7 +19,7 @@ jobs:
 
       - name: Create zip file
         run: |
-          zip -r satiscreate-${MODPACK_VERSION}.zip manifest.json config/
+          zip -r satiscreate-${MODPACK_VERSION}.zip manifest.json overrides/
 
       - name: Publish to CurseForge and GitHub
         uses: Kira-NT/mc-publish@v3
