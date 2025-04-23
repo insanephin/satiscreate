@@ -1,4 +1,4 @@
-![SatisCreate](./img/banner.png)
+![SatisCreate](https://github.com/insanephin/satiscreate/blob/main/img/banner.png?raw=true)
 
 ## About
 
