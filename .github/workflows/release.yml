@@ -14,14 +14,13 @@ jobs:
     - name: Extract version from manifest.json
       id: get_version
       run: |
-        VERSION=$(jq -r '.version' satiscreate/manifest.json)
+        VERSION=$(jq -r '.version' manifest.json)
         echo "MODPACK_VERSION=$VERSION" >> $GITHUB_ENV
         echo "version: $VERSION"
 
     - name: Create ZIP file
       run: |
-        cd satiscreate
-        zip -r ../satiscreate-${MODPACK_VERSION}.zip .
+        zip -r satiscreate-${MODPACK_VERSION}.zip manifest.json overrides/
 
     - name: Upload to CurseForge
       env:
