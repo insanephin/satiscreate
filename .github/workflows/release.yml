@@ -25,7 +25,7 @@ jobs:
         uses: Kira-NT/mc-publish@v3
         with:
           curseforge-id: ${{ secrets.CF_PROJECT_ID }}
-          curseforge-token: ${{ secrets.CF_API_TOKEN }}
+          curseforge-token: ${{ secrets.CF_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           files: satiscreate-${{ env.MODPACK_VERSION }}.zip
           name: "SatisCreate v${{ env.MODPACK_VERSION }}"
