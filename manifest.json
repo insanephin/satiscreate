@@ -11,7 +11,7 @@
   "manifestType": "minecraftModpack",
   "manifestVersion": 1,
   "name": "SatisCreate",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "author": "",
   "files": [
     {
@@ -120,11 +120,6 @@
       "required": true
     },
     {
-      "projectID": 627986,
-      "fileID": 6322818,
-      "required": true
-    },
-    {
       "projectID": 558905,
       "fileID": 6041697,
       "required": true
@@ -132,6 +127,11 @@
     {
       "projectID": 328085,
       "fileID": 6323270,
+      "required": true
+    },
+    {
+      "projectID": 627986,
+      "fileID": 6322818,
       "required": true
     },
     {
@@ -220,13 +220,13 @@
       "required": true
     },
     {
-      "projectID": 953438,
-      "fileID": 5354852,
+      "projectID": 313970,
+      "fileID": 6427226,
       "required": true
     },
     {
-      "projectID": 313970,
-      "fileID": 6427226,
+      "projectID": 953438,
+      "fileID": 5354852,
       "required": true
     },
     {
@@ -420,13 +420,13 @@
       "required": true
     },
     {
-      "projectID": 655608,
-      "fileID": 6274806,
+      "projectID": 255308,
+      "fileID": 6134920,
       "required": true
     },
     {
-      "projectID": 255308,
-      "fileID": 6134920,
+      "projectID": 655608,
+      "fileID": 6274806,
       "required": true
     },
     {
@@ -462,11 +462,6 @@
     {
       "projectID": 351264,
       "fileID": 5402061,
-      "required": true
-    },
-    {
-      "projectID": 526854,
-      "fileID": 4631193,
       "required": true
     },
     {
