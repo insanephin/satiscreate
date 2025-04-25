@@ -64,16 +64,16 @@ jobs:
           curseforge-token: ${{ secrets.CF_API_KEY }}
           modrinth-id: ${{ secrets.MODRINTH_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-        files: |
-          SatisCreate-${{ env.MODPACK_VERSION }}.zip
-          SatisCreate-${{ env.MODPACK_VERSION }}.mrpack
-        name: "SatisCreate v${{ env.MODPACK_VERSION }}"
-        version: v${{ env.MODPACK_VERSION }}
-        version-type: release
-        changelog: ${{ steps.changelog.outputs.CHANGELOG }}
-        loaders: |
-            forge
-            curseforge_modpack
-        game-versions: |
-            1.20.1
+          files: |
+            SatisCreate-${{ env.MODPACK_VERSION }}.zip
+            SatisCreate-${{ env.MODPACK_VERSION }}.mrpack
+          name: "SatisCreate v${{ env.MODPACK_VERSION }}"
+          version: v${{ env.MODPACK_VERSION }}
+          version-type: release
+          changelog: ${{ steps.changelog.outputs.CHANGELOG }}
+          loaders: |
+              forge
+              curseforge_modpack
+          game-versions: |
+              1.20.1
     
