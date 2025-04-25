@@ -674,7 +674,7 @@
 	beachedCachalotWhales = true
 	#Percent chance increase for each failed attempt to spawn a beached cachalot whale. Higher value = more spawns.
 	#Range: 0 ~ 100
-	beachedCachalotWhaleSpawnChance = 5
+	beachedCachalotWhaleSpawnChance = 10
 	#Delay (in ticks) between attempts to spawn beached cachalot whales. Default is a single day. Works like wandering traders.
 	#Range: > 0
 	beachedCachalotWhaleSpawnDelay = 24000
