@@ -45,7 +45,7 @@ jobs:
 
       - name: Import to packwiz format
         run: |
-          [ -f pack.toml ] || packwiz curseforge import satiscreate-${{ env.MODPACK_VERSION }}.zip
+          [ -f pack.toml ] || packwiz curseforge import satiscreate-${{ steps.version.outputs.VERSION }}.zip
           packwiz modrinth export -o SatisCreate-${{ steps.version.outputs.VERSION }}.mrpack
 
       - name: Generate changelog since last release
@@ -66,10 +66,10 @@ jobs:
           modrinth-id: ${{ secrets.MODRINTH_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: |
-            SatisCreate-${{ env.MODPACK_VERSION }}.zip
-            SatisCreate-${{ env.MODPACK_VERSION }}.mrpack
-          name: "SatisCreate v${{ env.MODPACK_VERSION }}"
-          version: v${{ env.MODPACK_VERSION }}
+            SatisCreate-${{ steps.version.outputs.VERSION }}.zip
+            SatisCreate-${{ steps.version.outputs.VERSION }}.mrpack
+          name: "SatisCreate v${{ steps.version.outputs.VERSION }}"
+          version: v${{ steps.version.outputs.VERSION }}
           version-type: release
           changelog: ${{ steps.changelog.outputs.CHANGELOG }}
           loaders: |
