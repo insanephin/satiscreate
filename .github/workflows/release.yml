@@ -1,39 +1,79 @@
-name: Publish Modpack
+name: Release Modpack
 
 on:
   push:
     paths:
       - 'manifest.json'
-  
+
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 태그 정보를 가져오기 위해 전체 히스토리를 가져옴
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install dependencies
+        run: sudo apt-get install -y jq zip
 
       - name: Extract version from manifest.json
-        id: extract
+        id: version
         run: |
           VERSION=$(jq -r '.version' manifest.json)
-          NAME=$(jq -r '.name' manifest.json)
-          echo "MODPACK_VERSION=$VERSION" >> $GITHUB_ENV
-          echo "MODPACK_NAME=$NAME" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Create zip file
+      - name: Install packwiz
         run: |
-          zip -r satiscreate-${MODPACK_VERSION}.zip manifest.json modlist.html overrides/
+          curl -sSL https://github.com/packwiz/packwiz/releases/latest/download/packwiz-linux-amd64 -o packwiz
+          chmod +x packwiz
+          sudo mv packwiz /usr/local/bin
 
-      - name: Publish to CurseForge and GitHub
+      - name: Generate .mrpack
+        run: |
+          [ -f pack.toml ] || packwiz curseforge import
+          packwiz modrinth export -o SatisCreate-${{ steps.version.outputs.VERSION }}.mrpack
+
+      - name: Create .zip
+        run: |
+          zip -r SatisCreate-${{ steps.version.outputs.VERSION }}.zip manifest.json overrides modlist.html
+
+      - name: Generate changelog since last release
+        id: changelog
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0)
+          LOG=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s" || echo "Initial release.")
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$LOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Publish to all platforms with mc-publish
         uses: Kira-NT/mc-publish@v3
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           curseforge-id: ${{ secrets.CF_PROJECT_ID }}
           curseforge-token: ${{ secrets.CF_API_KEY }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          files: satiscreate-${{ env.MODPACK_VERSION }}.zip
-          name: "SatisCreate v${{ env.MODPACK_VERSION }}"
-          version: v${{ env.MODPACK_VERSION }}
-          version-type: release
-          changelog: "Release v${{ env.MODPACK_VERSION }}"
-          loaders: curseforge_modpack
-          game-versions: |
+          modrinth-id: ${{ secrets.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+        files: |
+          SatisCreate-${{ env.MODPACK_VERSION }}.zip
+          SatisCreate-${{ env.MODPACK_VERSION }}.mrpack
+        name: "SatisCreate v${{ env.MODPACK_VERSION }}"
+        version: v${{ env.MODPACK_VERSION }}
+        version-type: release
+        changelog: ${{ steps.changelog.outputs.CHANGELOG }}
+        loaders: |
+            forge
+            curseforge_modpack
+        game-versions: |
             1.20.1
+    
