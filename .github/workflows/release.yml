@@ -45,7 +45,7 @@ jobs:
 
       - name: Import to packwiz format
         run: |
-          [ -f pack.toml ] || packwiz curseforge import satiscreate-${{ steps.version.outputs.VERSION }}.zip
+          [ -f pack.toml ] || packwiz curseforge import .
           packwiz modrinth export -o SatisCreate-${{ steps.version.outputs.VERSION }}.mrpack
 
       - name: Generate changelog since last release
