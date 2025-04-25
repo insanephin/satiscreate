@@ -39,14 +39,14 @@ jobs:
         
       - run: go install github.com/packwiz/packwiz@latest
         
-      - name: Generate .mrpack
-        run: |
-          [ -f pack.toml ] || packwiz curseforge import
-          packwiz modrinth export -o SatisCreate-${{ steps.version.outputs.VERSION }}.mrpack
-
       - name: Create .zip
         run: |
           zip -r SatisCreate-${{ steps.version.outputs.VERSION }}.zip manifest.json overrides modlist.html
+
+      - name: Import to packwiz format
+        run: |
+          [ -f pack.toml ] || packwiz curseforge import satiscreate-${{ env.MODPACK_VERSION }}.zip
+          packwiz modrinth export -o SatisCreate-${{ steps.version.outputs.VERSION }}.mrpack
 
       - name: Generate changelog since last release
         id: changelog
